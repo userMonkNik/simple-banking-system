@@ -17,21 +17,16 @@ public class Main {
             input = scannerInput.nextLine();
 
             switch (input) {
-                case "0" :
+                case "0" -> {
                     exitFromAuthMenuFlag = service.exitFlagChanger();
                     System.out.print("\nBye!");
-                    break;
-                case "1" :
+                }
+                case "1" -> {
                     Card currentCard = service.createAccount();
                     System.out.print(currentCard.toString());
-                    break;
-                case "2" :
-                        service.logIntoAccount(scannerInput);
-                        break;
-
-                default :
-                    service.printWrongActionMenu();
-                    break;
+                }
+                case "2" -> service.logIntoAccount(scannerInput);
+                default -> service.printWrongActionMenu();
             }
         }
     }

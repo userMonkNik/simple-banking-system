@@ -65,19 +65,13 @@ public class Service {
                 tempInput = scannerInput.nextLine();
 
                 switch (tempInput) {
-                    case "0" :
-                        exitFromMainMenuFlag = exitFlagChanger();
-                        break;
-                    case "1" :
-                        System.out.println("\nBalance: " + getBalance() + "\n");
-                        break;
-                    case "2" :
+                    case "0" -> exitFromMainMenuFlag = exitFlagChanger();
+                    case "1" -> System.out.println("\nBalance: " + getBalance() + "\n");
+                    case "2" -> {
                         System.out.println("\nYou have successfully logged out!\n");
                         exitFromMainMenuFlag = exitFlagChanger();
-                        break;
-                    default :
-                        printWrongActionMenu();
-                        break;
+                    }
+                    default -> printWrongActionMenu();
                 }
             }
         } else {
