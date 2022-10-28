@@ -1,7 +1,6 @@
 package banking;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Service {
 
@@ -26,21 +25,26 @@ public class Service {
 
     public Card createAccount() {
 
-        String cardId = generateId();
+        long id = setId();
+        String cardNumber = generateNumber();
         String cardPin = generatePin();
 
-        while (!repository.isUnique(cardId)) {
-            cardPin = generatePin();
+        HashSet<String> uniqueNumbersSet = repository.getAllNumber();
+
+        while (uniqueNumbersSet.contains(cardNumber)) {
+            cardNumber = generateNumber();
         }
 
-        return repository.save(new Card(cardId, cardPin));
+        return repository.save(new Card(id, cardNumber, cardPin));
     }
 
     private boolean isCorrectPin(String cardId, String cardPin) {
         Card tempCard = repository.get(cardId);
 
         if (tempCard != null) {
+
             if (tempCard.getPin().equals(cardPin)) {
+
                 System.out.println("\nYou have successfully logged in!\n");
                 sessionCard = tempCard;
                 return true;
@@ -88,7 +92,11 @@ public class Service {
         return true;
     }
 
-    private String generateId() {
+    private long setId() {
+        return ++Repository.currentIdSequence;
+    }
+
+    private String generateNumber() {
         StringBuilder tempId = new StringBuilder(BIN);
 
         for (int i = 0; tempId.length() < cardIdLength; i++) {
@@ -146,5 +154,4 @@ public class Service {
 
         return randomGenerator.nextInt(9);
     }
-
 }

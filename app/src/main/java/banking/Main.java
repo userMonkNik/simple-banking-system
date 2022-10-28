@@ -5,6 +5,11 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
+
+        if (args.length > 1) {
+            SQLiteConnect.dbName = args[1];
+        }
+
         final Scanner scannerInput = new Scanner(System.in);
         final Service service = new Service();
         boolean exitFromAuthMenuFlag = false;
