@@ -6,13 +6,14 @@ import java.sql.*;
 import java.util.HashSet;
 
 public class SQLiteConnect {
-
+    public static String dbName;
     public SQLiteConnect() {
         createTableIfNotExist();
     }
 
     public  Connection connect() {
-        String url = "jdbc:sqlite:bank.db";
+        setDbNameIfNotExists();
+        String url = "jdbc:sqlite:" + dbName;
 
         SQLiteDataSource dataSource = new SQLiteDataSource();
         dataSource.setUrl(url);
@@ -26,6 +27,12 @@ public class SQLiteConnect {
         }
 
         return con;
+    }
+
+    private void setDbNameIfNotExists() {
+        if (dbName == null) {
+            dbName = "bank.db";
+        }
     }
 
     public void createTableIfNotExist() {
