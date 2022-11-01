@@ -45,7 +45,7 @@ public class Service {
 
             if (tempCard.getPin().equals(cardPin)) {
 
-                System.out.println("\nYou have successfully logged in!\n");
+                System.out.println("\nYou have successfully logged in!");
                 sessionCard = tempCard;
                 return true;
             }
@@ -72,8 +72,9 @@ public class Service {
                     case "0" -> {
                         return exitFlagChanger();
                     }
-                    case "1" -> System.out.println("\nBalance: " + getBalance() + "\n");
-                    case "2" -> {
+                    case "1" -> System.out.println("\nBalance: " + getBalance());
+                    case "2" -> updateBalance(scannerInput);
+                    case "3" -> {
                         System.out.println("\nYou have successfully logged out!\n");
                         exitFromMainMenuFlag = exitFlagChanger();
                     }
@@ -86,8 +87,20 @@ public class Service {
         return false;
     }
 
+    private void updateBalance(Scanner scannerInput) {
+        System.out.println("\nEnter income:");
+
+        long income = scannerInput.nextLong();
+        scannerInput.nextLine();
+
+        repository.updateBalance(income, sessionCard.getNumber());
+
+        System.out.println("Income was added!");
+
+    }
+
     public long getBalance() {
-        return sessionCard.getBalance();
+        return repository.get(sessionCard.getNumber()).getBalance();
     }
 
     public boolean exitFlagChanger() {

@@ -28,6 +28,10 @@ public class Repository {
         return card;
     }
 
+    public void updateBalance(long income, String number) {
+        sqLiteConnect.updateBalance(income, number);
+    }
+
     public Card get(String id) {
         return sqLiteConnect.getObject(id);
     }

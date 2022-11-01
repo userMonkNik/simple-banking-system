@@ -77,6 +77,25 @@ public class SQLiteConnect {
         }
     }
 
+    public void updateBalance(long income, String number) {
+        String sqlUpdateBalance =
+                "UPDATE card\n" +
+                "SET balance = balance + ?\n" +
+                "WHERE number = ?;";
+
+        try (Connection con = connect();
+        PreparedStatement statement = con.prepareStatement(sqlUpdateBalance)) {
+
+            statement.setLong(1, income);
+            statement.setString(2, number);
+
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public long getLastIdValue() {
         String sqlGetMaxIdStatement = "SELECT MAX(id) as maxId FROM card;";
         long maxIdValue = 0;
