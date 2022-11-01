@@ -30,7 +30,12 @@ public class Main {
                     Card currentCard = service.createAccount();
                     System.out.print(currentCard.toString());
                 }
-                case "2" -> service.logIntoAccount(scannerInput);
+                case "2" -> {
+                    if (service.logIntoAccount(scannerInput)) {
+                       exitFromAuthMenuFlag = service.exitFlagChanger();
+                        System.out.print("\nBye!");
+                    }
+                }
                 default -> service.printWrongActionMenu();
             }
         }

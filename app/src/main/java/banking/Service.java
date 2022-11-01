@@ -53,7 +53,7 @@ public class Service {
         return false;
     }
 
-    public void logIntoAccount(Scanner scannerInput) {
+    public boolean logIntoAccount(Scanner scannerInput) {
 
         System.out.print("\nEnter your card number:\n");
         String cardId = scannerInput.nextLine();
@@ -69,7 +69,9 @@ public class Service {
                 tempInput = scannerInput.nextLine();
 
                 switch (tempInput) {
-                    case "0" -> exitFromMainMenuFlag = exitFlagChanger();
+                    case "0" -> {
+                        return exitFlagChanger();
+                    }
                     case "1" -> System.out.println("\nBalance: " + getBalance() + "\n");
                     case "2" -> {
                         System.out.println("\nYou have successfully logged out!\n");
@@ -81,6 +83,7 @@ public class Service {
         } else {
             System.out.print("\nWrong card number or PIN!\n");
         }
+        return false;
     }
 
     public long getBalance() {

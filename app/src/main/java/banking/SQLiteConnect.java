@@ -38,7 +38,7 @@ public class SQLiteConnect {
     public void createTableIfNotExist() {
 
         String sqlCreateTable =
-                "CREATE TABLE IF NOT EXISTS 'cards' (\n" +
+                "CREATE TABLE IF NOT EXISTS 'card' (\n" +
                         "id INT NOT NULL,\n" +
                         "number VARCHAR,\n" +
                         "pin VARCHAR,\n" +
@@ -58,7 +58,7 @@ public class SQLiteConnect {
     public void saveObject(long id, String number, String pin, long balance) {
 
         String sqlCreateObject =
-                "INSERT INTO cards(id,number, pin, balance)\n" +
+                "INSERT INTO card(id,number, pin, balance)\n" +
                 "VALUES\n" +
                 "(?, ?, ?, ?);";
 
@@ -78,7 +78,7 @@ public class SQLiteConnect {
     }
 
     public long getLastIdValue() {
-        String sqlGetMaxIdStatement = "SELECT MAX(id) as maxId FROM cards;";
+        String sqlGetMaxIdStatement = "SELECT MAX(id) as maxId FROM card;";
         long maxIdValue = 0;
 
         try (Connection con = connect();
@@ -99,7 +99,7 @@ public class SQLiteConnect {
 
         String sqlGetObject =
                 "SELECT *\n" +
-                "FROM cards\n" +
+                "FROM card\n" +
                 "WHERE number = ?;";
 
         try (Connection con = connect();
@@ -122,7 +122,7 @@ public class SQLiteConnect {
     }
 
     public HashSet<Long> getAllId() {
-        String sqlGetAllIds = "SELECT id FROM cards;";
+        String sqlGetAllIds = "SELECT id FROM card;";
         HashSet<Long> uniqueIdsSet = new HashSet<>();
 
         try (Connection con = connect();
@@ -142,7 +142,7 @@ public class SQLiteConnect {
     }
 
     public HashSet<String> getAllNumber() {
-        String sqlGetAllNumbers = "SELECT number FROM cards;";
+        String sqlGetAllNumbers = "SELECT number FROM card;";
         HashSet<String> uniqueNumbersSet = new HashSet<>();
 
         try (Connection con = connect();
@@ -164,7 +164,7 @@ public class SQLiteConnect {
     public void deleteObjectFromTable(long id) {
         String sqlDeleteStatement =
                 "DELETE\n" +
-                "FROM cards\n" +
+                "FROM card\n" +
                 "WHERE id = ?;";
 
         try (Connection con = connect();
