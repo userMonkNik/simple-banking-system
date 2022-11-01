@@ -85,7 +85,11 @@ public class Service {
                         }
                     }
                     case "4" -> {
-                        System.out.println("\nYou have successfully logged out!\n");
+                        deleteAccount();
+                        exitFromMainMenuFlag = exitFlagChanger();
+                    }
+                    case "5" -> {
+                        System.out.println("\nYou have successfully logged out!");
                         exitFromMainMenuFlag = exitFlagChanger();
                     }
                     default -> printWrongActionMenu();
@@ -149,10 +153,22 @@ public class Service {
         long income = scannerInput.nextLong();
         scannerInput.nextLine();
 
-        repository.updateBalance(income, sessionCard.getNumber());
+        if (income >= 0) {
 
-        System.out.print("Income was added!\n");
+            repository.updateBalance(income, sessionCard.getNumber());
+            System.out.print("Income was added!\n");
+        } else {
 
+            System.out.print("Wrong format. Please, try again...\n");
+        }
+    }
+
+    private void deleteAccount() {
+
+        repository.deleteAccount(sessionCard.getNumber());
+        sessionCard = null;
+
+        System.out.print("\nThe account has been closed!\n");
     }
 
     public long getBalance() {

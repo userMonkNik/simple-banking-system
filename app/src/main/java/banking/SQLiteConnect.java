@@ -225,16 +225,16 @@ public class SQLiteConnect {
         return uniqueNumbersSet;
     }
 
-    public void deleteObjectFromTable(long id) {
+    public void deleteObjectFromTable(String number) {
 
         String sqlDeleteObject =
                 "DELETE\n" +
                 "FROM card\n" +
-                "WHERE id = ?;";
+                "WHERE number = ?;";
 
         try (Connection con = connect();
         PreparedStatement statement = con.prepareStatement(sqlDeleteObject)) {
-            statement.setLong(1, id);
+            statement.setString(1, number);
             statement.executeUpdate();
 
         } catch (SQLException e) {

@@ -36,6 +36,10 @@ public class Repository {
         return sqLiteConnect.transactionalTransferMoney(currentUserNumber, recipientNumber, balance);
     }
 
+    public void deleteAccount(String number) {
+        sqLiteConnect.deleteObjectFromTable(number);
+    }
+
     public Card get(String id) {
         return sqLiteConnect.getObject(id);
     }

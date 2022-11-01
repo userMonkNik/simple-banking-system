@@ -36,6 +36,6 @@ public class Card {
                 "Your card number:\n" +
                 number + "\n" +
                 "Your card PIN:\n" +
-                pin + "\n\n";
+                pin + "\n";
     }
 }
