@@ -29,13 +29,18 @@ public class Service {
         String cardNumber = generateNumber();
         String cardPin = generatePin();
 
-        HashSet<String> uniqueNumbersSet = repository.getAllNumber();
-
-        while (uniqueNumbersSet.contains(cardNumber)) {
+        while (isNumberExists(cardNumber)) {
             cardNumber = generateNumber();
         }
 
         return repository.save(new Card(id, cardNumber, cardPin));
+    }
+
+    private boolean isNumberExists(String number) {
+
+        HashSet<String> uniqueNumbersSet = repository.getAllNumber();
+
+        return uniqueNumbersSet.contains(number);
     }
 
     private boolean isCorrectPin(String cardId, String cardPin) {
@@ -75,6 +80,11 @@ public class Service {
                     case "1" -> System.out.println("\nBalance: " + getBalance());
                     case "2" -> updateBalance(scannerInput);
                     case "3" -> {
+                        if (transferMoney(scannerInput)) {
+                            System.out.print("Success!\n");
+                        }
+                    }
+                    case "4" -> {
                         System.out.println("\nYou have successfully logged out!\n");
                         exitFromMainMenuFlag = exitFlagChanger();
                     }
@@ -87,15 +97,61 @@ public class Service {
         return false;
     }
 
+    private boolean transferMoney(Scanner scannerInput) {
+        System.out.print("\nTransfer\n" +
+                "Enter card number:\n");
+
+        String recipientNumber = scannerInput.nextLine();
+
+        if (!isLuhnAlgorithm(recipientNumber)) {
+            System.out.print("Probably you made a mistake in the card number. Please try again!\n");
+
+            return false;
+        }
+
+        if (!isNumberExists(recipientNumber)) {
+            System.out.print("Such a card does not exist.\n");
+
+            return false;
+        }
+
+        if (sessionCard.getNumber().equals(recipientNumber)) {
+            System.out.print("You can't transfer money to the same account!\n");
+
+            return false;
+        }
+
+        System.out.print("Enter how much money you want to transfer:\n");
+
+        long moneyToTransfer = scannerInput.nextLong();
+        scannerInput.nextLine();
+
+        if (!isEnoughMoneyToTransfer(moneyToTransfer)) {
+            System.out.print("Not enough money!\n");
+
+            return false;
+        }
+
+        return repository.transactionalTransferMoney(
+                sessionCard.getNumber(),
+                recipientNumber,
+                moneyToTransfer
+                );
+    }
+
+    private boolean isEnoughMoneyToTransfer(long money) {
+        return (repository.get(sessionCard.getNumber()).getBalance()) - money >= 0;
+    }
+
     private void updateBalance(Scanner scannerInput) {
-        System.out.println("\nEnter income:");
+        System.out.print("\nEnter income:\n");
 
         long income = scannerInput.nextLong();
         scannerInput.nextLine();
 
         repository.updateBalance(income, sessionCard.getNumber());
 
-        System.out.println("Income was added!");
+        System.out.print("Income was added!\n");
 
     }
 
@@ -132,6 +188,18 @@ public class Service {
         }
 
         return tempPin.toString();
+    }
+
+    private boolean isLuhnAlgorithm(String recipientNumber) {
+
+        if (recipientNumber.length() != 16) {
+            return false;
+        }
+
+        String subStringRecipientNumber = recipientNumber.substring(0, 15);
+        int luhnNumber = luhnAlgorithm(subStringRecipientNumber);
+
+        return luhnNumber == Integer.parseInt(recipientNumber.substring(15, 16));
     }
 
     private int luhnAlgorithm(String id) {

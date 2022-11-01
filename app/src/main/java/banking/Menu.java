@@ -8,7 +8,8 @@ public class Menu {
     public static String MAIN =
             "\n1. Balance\n" +
             "2. Add income\n" +
-            "3. Log out\n" +
+            "3. Do transfer\n" +
+            "4. Log out\n" +
             "0. Exit\n";
     public static String WRONG_ACTION = "Wrong action, please try again.\n";
 

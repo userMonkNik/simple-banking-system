@@ -32,6 +32,10 @@ public class Repository {
         sqLiteConnect.updateBalance(income, number);
     }
 
+    public boolean transactionalTransferMoney(String currentUserNumber,String recipientNumber, long balance) {
+        return sqLiteConnect.transactionalTransferMoney(currentUserNumber, recipientNumber, balance);
+    }
+
     public Card get(String id) {
         return sqLiteConnect.getObject(id);
     }

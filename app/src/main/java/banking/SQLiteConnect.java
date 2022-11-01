@@ -78,6 +78,7 @@ public class SQLiteConnect {
     }
 
     public void updateBalance(long income, String number) {
+
         String sqlUpdateBalance =
                 "UPDATE card\n" +
                 "SET balance = balance + ?\n" +
@@ -96,14 +97,56 @@ public class SQLiteConnect {
         }
     }
 
+    public boolean transactionalTransferMoney(String currentUserNumber,String recipientNumber, long balance) {
+
+        String sqlUpdateCurrentUserBalance =
+                "UPDATE card\n" +
+                "SET balance = balance - ?\n" +
+                "WHERE number = ?;";
+        String sqlUpdateRecipientBalance =
+                "UPDATE card\n" +
+                "SET balance = balance + ?\n" +
+                "WHERE number = ?;";
+
+        try (Connection con = connect()) {
+
+            con.setAutoCommit(false);
+
+            try (PreparedStatement updateCurrentUserStatement = con.prepareStatement(sqlUpdateCurrentUserBalance);
+            PreparedStatement updateRecipientStatement = con.prepareStatement(sqlUpdateRecipientBalance)) {
+
+                updateCurrentUserStatement.setLong(1, balance);
+                updateCurrentUserStatement.setString(2, currentUserNumber);
+                updateCurrentUserStatement.executeUpdate();
+
+                updateRecipientStatement.setLong(1, balance);
+                updateRecipientStatement.setString(2, recipientNumber);
+                updateRecipientStatement.executeUpdate();
+
+                con.commit();
+                return true;
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public long getLastIdValue() {
-        String sqlGetMaxIdStatement = "SELECT MAX(id) as maxId FROM card;";
+
+        String sqlGetMaxId = "SELECT MAX(id) as maxId FROM card;";
         long maxIdValue = 0;
 
         try (Connection con = connect();
         Statement statement = con.createStatement()) {
 
-            ResultSet resultSet = statement.executeQuery(sqlGetMaxIdStatement);
+            ResultSet resultSet = statement.executeQuery(sqlGetMaxId);
 
             maxIdValue = resultSet.getLong("maxId");
 
@@ -141,6 +184,7 @@ public class SQLiteConnect {
     }
 
     public HashSet<Long> getAllId() {
+
         String sqlGetAllIds = "SELECT id FROM card;";
         HashSet<Long> uniqueIdsSet = new HashSet<>();
 
@@ -161,6 +205,7 @@ public class SQLiteConnect {
     }
 
     public HashSet<String> getAllNumber() {
+
         String sqlGetAllNumbers = "SELECT number FROM card;";
         HashSet<String> uniqueNumbersSet = new HashSet<>();
 
@@ -181,13 +226,14 @@ public class SQLiteConnect {
     }
 
     public void deleteObjectFromTable(long id) {
-        String sqlDeleteStatement =
+
+        String sqlDeleteObject =
                 "DELETE\n" +
                 "FROM card\n" +
                 "WHERE id = ?;";
 
         try (Connection con = connect();
-        PreparedStatement statement = con.prepareStatement(sqlDeleteStatement)) {
+        PreparedStatement statement = con.prepareStatement(sqlDeleteObject)) {
             statement.setLong(1, id);
             statement.executeUpdate();
 
