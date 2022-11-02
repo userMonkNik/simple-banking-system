@@ -38,6 +38,7 @@ public class Repository {
 
     public void deleteAccount(String number) {
         sqLiteConnect.deleteObjectFromTable(number);
+        uniqueNumbers.remove(number);
     }
 
     public Card get(String id) {
